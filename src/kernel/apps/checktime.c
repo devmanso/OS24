@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
 #include <stdint.h>
 #include "drivers/ports.h"
@@ -28,21 +27,21 @@
 #define CMOS_DATA 0x71
 
 // Function to read from the CMOS RTC
-unsigned int read_rtc_register(unsigned int reg) {
+unsigned int _read_rtc_register(unsigned int reg) {
     outb(reg, CMOS_ADDRESS);
     return inb(CMOS_DATA);
 }
 
 // Function to convert BCD to decimal
-unsigned int bcd_to_decimal(unsigned int bcd) {
+unsigned int _bcd_to_decimal(unsigned int bcd) {
     return (bcd & 0x0F) + ((bcd >> 4) * 10);
 }
 
 void get_time(unsigned int *hour, unsigned int *minute, unsigned int *second) {
     // Read the time registers
-    *second = bcd_to_decimal(read_rtc_register(0x00));
-    *minute = bcd_to_decimal(read_rtc_register(0x02));
-    *hour = bcd_to_decimal(read_rtc_register(0x04));
+    *second = _bcd_to_decimal(_read_rtc_register(0x00));
+    *minute = _bcd_to_decimal(_read_rtc_register(0x02));
+    *hour = _bcd_to_decimal(_read_rtc_register(0x04));
 }
 
 int printtime(int argc, char **argv) {
